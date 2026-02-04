@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: teahouse-academy
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/TeahouseAcademy
+    username: Admin
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
