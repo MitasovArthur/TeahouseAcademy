@@ -1,12 +1,11 @@
 package com.teahouse.teahouse_academy.model.entity;
 
 import com.teahouse.teahouse_academy.model.enumProject.TypeTea;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,14 +13,36 @@ import org.springframework.data.annotation.Id;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name="tea")
+@Table(name = "tea")
 public class TeaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    Long codeTea;
-    TypeTea type;
-    String name;
-    String description;
+    @Column(name = "tea_id")
+    private Long id;
 
+    @Column(name = "code", nullable = false, unique = true)
+    private Integer codeTea;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, length = 50)
+    private TypeTea type;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    private String description;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "tea_components",
+            joinColumns = @JoinColumn(name = "tea_id"),
+            inverseJoinColumns = @JoinColumn(name = "components_id")
+    )
+    @ToString.Exclude
+    private List<ComponentEntity> components = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private List<ReviewEntity> reviews = new ArrayList<>();
 }
