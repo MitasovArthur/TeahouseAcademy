@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -40,9 +41,11 @@ public class TeaEntity {
             inverseJoinColumns = @JoinColumn(name = "components_id")
     )
     @ToString.Exclude
+    @Builder.Default
     private List<ComponentEntity> components = new ArrayList<>();
 
     @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Builder.Default
     private List<ReviewEntity> reviews = new ArrayList<>();
 }
