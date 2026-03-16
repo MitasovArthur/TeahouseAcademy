@@ -1,4 +1,7 @@
 spring:
+  docker:
+    compose:
+      enabled: false
   application:
     name: teahouse-academy
 
@@ -11,3 +14,12 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+
+  flyway:
+    enabled: true
+
+gg:
+  jte:
+    developmentMode: true
+    precompiled: false
+    templateLocation: src/main/resources/jte

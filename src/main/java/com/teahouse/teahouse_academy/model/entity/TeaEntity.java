@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -35,14 +36,16 @@ public class TeaEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "tea_components",
+            name = "tea_attributes",
             joinColumns = @JoinColumn(name = "tea_id"),
-            inverseJoinColumns = @JoinColumn(name = "components_id")
+            inverseJoinColumns = @JoinColumn(name = "attribute_id")
     )
     @ToString.Exclude
-    private List<ComponentEntity> components = new ArrayList<>();
+    @Builder.Default
+    private List<AttributeEntity> attributes = new ArrayList<>();
 
     @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Builder.Default
     private List<ReviewEntity> reviews = new ArrayList<>();
 }
