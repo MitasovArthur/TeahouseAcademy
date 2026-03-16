@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TeaUpdateDto {
+public class TeaRequestDto {
     @NotNull
     @Positive
     private Integer codeTea;
@@ -27,6 +27,5 @@ public class TeaUpdateDto {
     private String description;
 
     @NotEmpty
-    private List<Long> componentIds;
-
+    private List<Long> attributeIds;
 }

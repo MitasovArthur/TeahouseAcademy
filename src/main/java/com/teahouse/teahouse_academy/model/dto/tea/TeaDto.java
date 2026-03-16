@@ -1,6 +1,6 @@
 package com.teahouse.teahouse_academy.model.dto.tea;
 
-import com.teahouse.teahouse_academy.model.dto.component.ComponentShortDto;
+import com.teahouse.teahouse_academy.model.dto.attribute.AttributeShortDto;
 import com.teahouse.teahouse_academy.model.dto.review.ReviewShortDto;
 import com.teahouse.teahouse_academy.model.enumProject.TypeTea;
 import lombok.AllArgsConstructor;
@@ -18,6 +18,9 @@ public class TeaDto {
     private TypeTea type;
     private String name;
     private String description;
-    private List<ComponentShortDto> componentsShort;
+
+    private List<AttributeShortDto> componentsShort;
+    private List<AttributeShortDto> countriesShort;
+
     private List<ReviewShortDto> reviewShort;
 }

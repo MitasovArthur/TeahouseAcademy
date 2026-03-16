@@ -106,6 +106,12 @@
 			<version>3.2.2</version>
 		</dependency>
 
+		<dependency>
+			<groupId>gg.jte</groupId>
+			<artifactId>jte-spring-boot-starter-3</artifactId>
+			<version>3.1.12</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -157,6 +163,25 @@
 							<version>1.6.0.Beta1</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>gg.jte</groupId>
+				<artifactId>jte-maven-plugin</artifactId>
+				<version>3.1.12</version>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<sourceDirectory>${project.basedir}/src/main/resources/jte</sourceDirectory>
+					<targetDirectory>${project.build.directory}/generated-sources/jte</targetDirectory>
+					<contentType>Html</contentType>
 				</configuration>
 			</plugin>
 
