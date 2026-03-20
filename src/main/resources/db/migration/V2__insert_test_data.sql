@@ -1,7 +1,7 @@
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE tea_attributes;
 TRUNCATE TABLE attributes;
-TRUNCATE TABLE tea;
+TRUNCATE TABLE teas;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO attributes (attribute_id, category, name, parent_id) VALUES
@@ -51,7 +51,8 @@ INSERT INTO attributes (attribute_id, category, name, parent_id) VALUES
 (36, 'COMPONENT', 'Ароматизатор манго',               null),
 (37, 'COMPONENT', 'Ароматизатор саусеп',              null);
 
-INSERT INTO tea (tea_id, code, name, description, type) VALUES
+-- ТУТ ВИПРАВИЛИ назву таблиці
+INSERT INTO teas (tea_id, code, name, description, type) VALUES
 (1,  502, 'Чай Масала №502',
      'Ароматний і зігріваючий напій, створений на основі традиційного індійського рецепту. Традиційні для цього чаю спеції створюють пікантний мікс.',
      'BLACK'),
