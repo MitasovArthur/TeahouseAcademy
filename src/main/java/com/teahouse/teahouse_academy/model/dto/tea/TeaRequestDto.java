@@ -3,12 +3,14 @@ package com.teahouse.teahouse_academy.model.dto.tea;
 import com.teahouse.teahouse_academy.model.enumProject.TypeTea;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeaRequestDto {

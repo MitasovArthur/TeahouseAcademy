@@ -6,18 +6,18 @@ import com.teahouse.teahouse_academy.model.dto.tea.TeaDto;
 import com.teahouse.teahouse_academy.model.dto.tea.TeaFilterRequest;
 import com.teahouse.teahouse_academy.model.dto.tea.TeaRequestDto;
 import com.teahouse.teahouse_academy.model.entity.AttributeEntity;
-import com.teahouse.teahouse_academy.model.entity.TeaEntity;
 import com.teahouse.teahouse_academy.model.enumProject.CategoryAttribute;
 import com.teahouse.teahouse_academy.model.enumProject.TypeTea;
 import com.teahouse.teahouse_academy.service.AttributeService;
 import com.teahouse.teahouse_academy.service.TeaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -34,24 +34,16 @@ public class TeaFacade {
         return teaService.search(filter, pageable).map(mapper::toDto);
     }
 
-    public TeaDto createNewTea(TeaRequestDto teaRequestDto) {
-        return mapper.toDto(teaService.create(teaRequestDto));
+    public void createNewTea(TeaRequestDto teaRequestDto) {
+        teaService.create(teaRequestDto);
     }
 
-    public TeaDto updateTea(Long id, TeaRequestDto teaRequestDto) {
-        return mapper.toDto(teaService.update(id, teaRequestDto));
+    public void updateTea(Long id, TeaRequestDto teaRequestDto) {
+        teaService.update(id, teaRequestDto);
     }
 
     public void deleteTea(Long id) {
         teaService.delete(id);
-    }
-
-    public Map<String, List<String>> getComponentsDictionary() {
-        return attributeService.getComponentsGroupedByLetter();
-    }
-
-    public Map<String, List<String>> getRegionsDictionary() {
-        return attributeService.getRegionsGroupedByCountry();
     }
 
     public TeaDto getById(Long id) {
@@ -59,35 +51,55 @@ public class TeaFacade {
     }
 
     public TeaRequestDto getRequestDtoById(Long id) {
-        TeaEntity teaEntity = teaService.getById(id);
-
-        TeaRequestDto request = new TeaRequestDto();
-        request.setCodeTea(teaEntity.getCodeTea());
-        request.setName(teaEntity.getName());
-        request.setType(teaEntity.getType());
-        request.setDescription(teaEntity.getDescription());
-        request.setAttributeIds(
-                teaEntity.getAttributes().stream()
-                        .map(AttributeEntity::getId)
-                        .toList()
-        );
-        return request;
-    }
-
-    public List<AttributeShortDto> getAllAttributes() {
-        return attributeService.getAllAttributes();
+        return mapper.toRequestDto(teaService.getById(id));
     }
 
     public List<AttributeShortDto> getComponents() {
-        return attributeService.getByCategory(CategoryAttribute.COMPONENT);
+        return attributeService.getByCategory(CategoryAttribute.COMPONENT).stream()
+                .map(mapper::toAttributeShortDto)
+                .toList();
     }
 
     public List<AttributeShortDto> getCountries() {
-        return attributeService.getByCategory(CategoryAttribute.COUNTRY);
+        return attributeService.getByCategory(CategoryAttribute.COUNTRY).stream()
+                .map(mapper::toAttributeShortDto)
+                .toList();
     }
 
     public List<AttributeShortDto> getRegions() {
-        return attributeService.getByCategory(CategoryAttribute.REGION);
+        return attributeService.getByCategory(CategoryAttribute.REGION).stream()
+                .map(mapper::toAttributeShortDto)
+                .toList();
+    }
+
+    @Cacheable("components")
+    public Map<String, List<String>> getComponentsDictionary() {
+        List<AttributeEntity> components = attributeService.getByCategory(CategoryAttribute.COMPONENT);
+
+        Map<String, List<String>> grouped = new TreeMap<>();
+        for (AttributeEntity attr : components) {
+            String name = attr.getName();
+            if (name == null || name.isBlank()) continue;
+            String letter = name.substring(0, 1).toUpperCase();
+            grouped.computeIfAbsent(letter, k -> new ArrayList<>()).add(name);
+        }
+        return grouped;
+    }
+
+    @Cacheable("regions")
+    public Map<String, List<String>> getRegionsDictionary() {
+        List<AttributeEntity> countries = attributeService.getCountriesWithRegions();
+
+        return countries.stream()
+                .collect(Collectors.toMap(
+                        AttributeEntity::getName,
+                        country -> country.getChildren().stream()
+                                .map(AttributeEntity::getName)
+                                .sorted()
+                                .toList(),
+                        (a, b) -> a,
+                        LinkedHashMap::new
+                ));
     }
 
     private TypeTea parseTeaType(String type) {

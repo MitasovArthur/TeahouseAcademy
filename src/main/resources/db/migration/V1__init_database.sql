@@ -29,6 +29,7 @@ create table cities (
 create table shops (
     shop_id bigint not null auto_increment,
     name varchar(100) not null,
+    address varchar(200) not null,
     city_id bigint,
     primary key (shop_id)
 ) engine=InnoDB;
@@ -45,7 +46,7 @@ create table users (
 ) engine=InnoDB;
 
 create table reviews (
-    review_id bigint not null auto_increment,  -- ← BIGINT
+    review_id bigint not null auto_increment,
     aroma     INT  not null,
     astringency INT  not null,
     strength  INT  not null,
@@ -62,14 +63,17 @@ create table meetings (
     description TEXT,
     date date not null,
     is_online bit not null,
+    is_completed bit not null default 0,
     primary key (meeting_id)
 ) engine=InnoDB;
 
 create table meeting_resources (
     resource_id bigint not null auto_increment,
+    file_name varchar(255),
     title varchar(255) not null,
-    url varchar(255) not null,
-    type enum ('ARTICLE','BOOK','VIDEO') not null,
+    url TEXT not null,
+    file_key varchar(255),
+    type enum ('VIDEO', 'ARTICLE', 'LINK', 'BOOK', 'DOCUMENT', 'PRESENTATION', 'IMAGE', 'ARCHIVE', 'OTHER') not null,
     meeting_id bigint not null,
     primary key (resource_id)
 ) engine=InnoDB;
@@ -78,8 +82,18 @@ create table teams (
     team_id bigint not null auto_increment,
     name varchar(255) not null,
     topic varchar(255),
+    status enum ('IN_PROGRESS','SUBMITTED','DONE') not null,
     meeting_id bigint,
     primary key (team_id)
+) engine=InnoDB;
+
+create table team_comments (
+    id bigint not null auto_increment,
+    team_id bigint not null,
+    text TEXT not null,
+    action_type varchar(50) not null,
+    created_at datetime(6) not null,
+    primary key (id)
 ) engine=InnoDB;
 
 create table team_users (
@@ -88,15 +102,33 @@ create table team_users (
     primary key (team_id, user_id)
 ) engine=InnoDB;
 
+-- Видалено поле admin_feedback, оскільки тепер є стрічка історії в team_comments
 create table submissions (
     submission_id bigint not null auto_increment,
-    title varchar(255),
-    description TEXT,
-    file_link varchar(255),
+    file_name varchar(255),
+    file_link TEXT,
+    file_key varchar(255),
     created_at datetime(6) not null,
-    team_id bigint,
+    team_id bigint not null,
     primary key (submission_id)
 ) engine=InnoDB;
+
+-- Таблиця для зберігання унікальних тегів (словник)
+CREATE TABLE tags (
+    tag_id BIGINT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    PRIMARY KEY (tag_id),
+    CONSTRAINT UK_tag_name UNIQUE (name)
+) ENGINE=InnoDB;
+
+-- Таблиця-зв'язка між зібраннями (meetings) та тегами (tags)
+CREATE TABLE meeting_tags (
+    meeting_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    PRIMARY KEY (meeting_id, tag_id),
+    CONSTRAINT FK_meeting_tags_meeting FOREIGN KEY (meeting_id) REFERENCES meetings (meeting_id) ON DELETE CASCADE,
+    CONSTRAINT FK_meeting_tags_tag FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 alter table teas
     add constraint UK_teas_code unique (code);
@@ -130,6 +162,9 @@ alter table meeting_resources
 
 alter table teams
     add constraint FK_team_meeting foreign key (meeting_id) references meetings (meeting_id);
+
+alter table team_comments
+    add constraint FK_comment_team foreign key (team_id) references teams (team_id) on delete cascade;
 
 alter table team_users
     add constraint FK_team_user_team foreign key (team_id) references teams (team_id);

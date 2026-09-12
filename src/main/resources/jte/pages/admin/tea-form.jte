@@ -64,13 +64,19 @@
 
                 <ul class="nav nav-tabs mb-2" id="attrTabs">
                     <li class="nav-item">
-                        <button type="button" class="nav-link active" data-tab="components">🌿 Компоненти</button>
+                        <button type="button" class="nav-link active d-inline-flex align-items-center gap-2" data-tab="components">
+                            <span class="d-flex">@template.layout.icon(name = "leaf", size = "18")</span> Компоненти
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="nav-link" data-tab="countries">🌍 Країни</button>
+                        <button type="button" class="nav-link d-inline-flex align-items-center gap-2" data-tab="countries">
+                            <span class="d-flex">@template.layout.icon(name = "planet", size = "18")</span> Країни
+                        </button>
                     </li>
                     <li class="nav-item">
-                        <button type="button" class="nav-link" data-tab="regions">📍 Регіони</button>
+                        <button type="button" class="nav-link d-inline-flex align-items-center gap-2" data-tab="regions">
+                            <span class="d-flex">@template.layout.icon(name = "mapPin", size = "18")</span> Регіони
+                        </button>
                     </li>
                 </ul>
 

@@ -19,11 +19,17 @@ public class MeetingResourceEntity {
     @Column(name = "resource_id")
     private Long id;
 
+    @Column(name = "file_name")
+    private String fileName;
+
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "url", nullable = false)
+    @Column(name = "url",columnDefinition = "TEXT", nullable = false)
     private String url;
+
+    @Column(name = "file_key")
+    private String fileKey;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)

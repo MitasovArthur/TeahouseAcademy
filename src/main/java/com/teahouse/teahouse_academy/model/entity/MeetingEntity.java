@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Setter
@@ -32,11 +32,35 @@ public class MeetingEntity {
     @Column(name = "is_online", nullable = false)
     private Boolean isOnline;
 
-    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private List<TeamEntity> teams;
+    @Builder.Default
+    @Column(name = "is_completed", nullable = false)
+    private Boolean isCompleted = false;
 
     @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List<MeetingResourceEntity> resources;
+    private Set<TeamEntity> teams = new HashSet<>();
+
+    @OneToMany(mappedBy = "meeting", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<MeetingResourceEntity> resources = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "meeting_tags",
+            joinColumns = @JoinColumn(name = "meeting_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<TagEntity> tags = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        MeetingEntity that = (MeetingEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

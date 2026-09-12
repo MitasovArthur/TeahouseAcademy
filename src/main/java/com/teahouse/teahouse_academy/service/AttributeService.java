@@ -1,18 +1,23 @@
 package com.teahouse.teahouse_academy.service;
 
-import com.teahouse.teahouse_academy.model.dto.attribute.AttributeShortDto;
+import com.teahouse.teahouse_academy.model.dto.attribute.AttributeRequestDto;
+import com.teahouse.teahouse_academy.model.entity.AttributeEntity;
 import com.teahouse.teahouse_academy.model.enumProject.CategoryAttribute;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AttributeService {
+    AttributeEntity getById(Long id);
 
-    List<AttributeShortDto> getAllAttributes();
+    List<AttributeEntity> getAllAttributesById(List<Long> ids);
 
-    Map<String, List<String>> getComponentsGroupedByLetter();
+    List<AttributeEntity> getByCategory(CategoryAttribute category);
 
-    Map<String, List<String>> getRegionsGroupedByCountry();
+    List<AttributeEntity> getCountriesWithRegions();
 
-    List<AttributeShortDto> getByCategory(CategoryAttribute category);
+    AttributeEntity create(AttributeRequestDto requestDto);
+
+    AttributeEntity update(Long id, AttributeRequestDto requestDto);
+
+    void delete(Long id);
 }

@@ -40,7 +40,7 @@ public class TeaWebController {
         model.addAttribute("groupedCountries", teaFacade.getRegionsDictionary());
         model.addAttribute("isAdmin", true);
 
-        return "pages/teas";
+        return "pages/common/teas";
     }
 
     private void addFormAttributes(Model model) {
@@ -54,7 +54,7 @@ public class TeaWebController {
     public String showCreateForm(Model model) {
         model.addAttribute("teaForm", new TeaRequestDto());
         addFormAttributes(model);
-        return "pages/tea-form";
+        return "pages/admin/tea-form";
     }
 
     @PostMapping("/new")
@@ -74,7 +74,7 @@ public class TeaWebController {
         } catch (IllegalArgumentException e) {
             model.addAttribute("codeTeaError", "Чай з таким кодом вже існує");
             addFormAttributes(model);
-            return "pages/tea-form";
+            return "pages/admin/tea-form";
         }
     }
 
@@ -83,7 +83,7 @@ public class TeaWebController {
         model.addAttribute("teaForm", teaFacade.getRequestDtoById(id));
         model.addAttribute("teaId", id);
         addFormAttributes(model);
-        return "pages/tea-form";
+        return "pages/admin/tea-form";
     }
 
     @PostMapping("/{id}/edit")
@@ -96,7 +96,7 @@ public class TeaWebController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("teaId", id);
             addFormAttributes(model);
-            return "pages/tea-form";
+            return "pages/admin/tea-form";
         }
 
         teaFacade.updateTea(id, request);

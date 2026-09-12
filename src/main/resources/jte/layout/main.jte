@@ -1,13 +1,50 @@
 @param gg.jte.Content content
+@param Boolean isAdmin = true
+@param String successMessage = null
+@param String errorMessage = null
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Tea</title>
+    <title>TeaHouse Academy</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/Navbar-Centered-Brand-Dark-icons.css">
+    <link rel="stylesheet" href="/assets/css/teahouse-core.css">
+
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+
+    @if(successMessage != null)
+        <div class="toast align-items-center text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold">
+                    ✅ ${successMessage}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    @endif
+
+    @if(errorMessage != null)
+        <div class="toast align-items-center text-bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body fw-semibold">
+                    ❌ ${errorMessage}
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    @endif
+
+</div>
+
 <nav class="navbar navbar-dark navbar-expand-md py-3" style="background: rgb(14,87,39);">
     <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon" style="background: rgb(255,255,255);"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-book-fill text-success" style="border-color: rgb(133,59,59);">
                         <path d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z"></path>
@@ -18,6 +55,10 @@
                 <li class="nav-item"><a class="nav-link" href="/teas">Чайний Навігатор</a></li>
                 <li class="nav-item"><a class="nav-link" href="/academy">Академія Teahouse</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Чайний Сомельє</a></li>
+
+                @if(isAdmin)
+                    <li class="nav-item"><a class="nav-link fw-bold" style="color: #ffc107;" href="/admin/academy">Адмін-панель</a></li>
+                @endif
             </ul>
         </div>
     </div>
@@ -56,6 +97,15 @@
     </div>
 </footer>
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.toast').forEach(toastEl => {
+            const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+            toast.show();
+        });
+    });
+</script>
 </body>
 
 </html>

@@ -107,3 +107,72 @@ INSERT INTO tea_attributes (tea_id, attribute_id) VALUES
 (11, 45), (11, 46),
 (12, 38), (12, 39),
 (13, 38), (13, 39);
+
+
+INSERT INTO cities (city_id, name) VALUES
+(1, 'Київ'),
+(2, 'Дніпро');
+
+
+INSERT INTO shops (shop_id, name, address, city_id) VALUES
+(1, 'Київ ЦУМ','ул. Крещатик, 38, ЦУМ, 6 этаж', 1),
+(2, 'Короленко','ул. Короленко 1', 2),
+(3, 'Менора','ул. Шолом-Алейхема 4, КДЦ «Менора», 1 этаж', 2),
+(4, 'Нагорка','ул. Дмитрия Донцова 2 А Место 11В, 1 этаж', 2),
+(5, 'Сачок','пл. Соборная 1', 2),
+(6, 'Дніпро Ботанік','ул. Липинського, 4, STROOM — Intelligent business space', 2);
+
+
+INSERT INTO users (user_id, first_name, last_name, email, password, role, shop_id) VALUES
+(1, 'Олександр', 'Мельник', 'o.melnyk@teahouse.ua', '12345', 'ADMIN', null),
+(2, 'Вікторія', 'Коваленко', 'v.kovalenko@teahouse.ua', '12345', 'ADMIN', null),
+
+(3, 'Артем', 'Бондаренко', 'a.bondarenko@teahouse.ua', '12345', 'GUEST', 1),
+(4, 'Юлія', 'Шевченко', 'y.shevchenko@teahouse.ua', '12345', 'GUEST', 2),
+(5, 'Дмитро', 'Ткаченко', 'd.tkachenko@teahouse.ua', '12345', 'GUEST', 6),
+(6, 'Катерина', 'Олійник', 'k.oliynyk@teahouse.ua', '12345', 'GUEST', 4),
+
+(7, 'Андрій', 'Кравченко', 'a.kravchenko@teahouse.ua', '12345', 'LEVEL_ONE', 1),
+(8, 'Олена', 'Поліщук', 'o.polishchuk@teahouse.ua', '12345', 'LEVEL_ONE', 2),
+(9, 'Сергій', 'Бойко', 's.boyko@teahouse.ua', '12345', 'LEVEL_ONE', 3),
+(10, 'Наталія', 'Мороз', 'n.moroz@teahouse.ua', '12345', 'LEVEL_ONE', 4),
+(11, 'Максим', 'Лисенко', 'm.lysenko@teahouse.ua', '12345', 'LEVEL_ONE', 5),
+(12, 'Тетяна', 'Петренко', 't.petrenko@teahouse.ua', '12345', 'LEVEL_ONE', 1),
+
+(13, 'Ігор', 'Клименко', 'i.klymenko@teahouse.ua', '12345', 'LEVEL_TWO', 1),
+(14, 'Марина', 'Павленко', 'm.pavlenko@teahouse.ua', '12345', 'LEVEL_TWO', 2),
+(15, 'Вадим', 'Сидоренко', 'v.sydorenko@teahouse.ua', '12345', 'LEVEL_TWO', 3),
+(16, 'Світлана', 'Козак', 's.kozak@teahouse.ua', '12345', 'LEVEL_TWO', 5),
+
+(17, 'Богдан', 'Марченко', 'b.marchenko@teahouse.ua', '12345', 'LEVEL_THREE', 1),
+(18, 'Яна', 'Савченко', 'y.savchenko@teahouse.ua', '12345', 'LEVEL_THREE', 2),
+(19, 'Роман', 'Василенко', 'r.vasylenko@teahouse.ua', '12345', 'LEVEL_THREE', 3),
+(20, 'Христина', 'Харченко', 'h.kharchenko@teahouse.ua', '12345', 'LEVEL_THREE', 6);
+
+INSERT INTO meetings (meeting_id, name, description, date, is_online) VALUES
+(1, 'Чайні традиції Японії', 'Вивчаємо японські культивари, методи заварювання та історію.', '2026-05-28', 1),
+(2, 'Основи китайського чаю', 'Знайомство з базовими видами китайського чаю. Регіон Фуцзянь.', '2026-02-20', 0);
+
+INSERT INTO meeting_resources (resource_id, title, url, type, meeting_id) VALUES
+(1, 'Відео: Японська чайна церемонія', 'https://youtube.com', 'VIDEO', 1),
+(2, 'Стаття: Що таке Матча?', 'https://teahouse.ua', 'ARTICLE', 1);
+
+INSERT INTO teams (team_id, name, topic, status, meeting_id) VALUES
+(1, 'Київ Центр', 'Культивари Японії', 'SUBMITTED', 1),
+(2, 'Львів Площа Ринок', 'Методи заварки', 'SUBMITTED', 1),
+(3, 'Дніпро Ботанік', 'Історія чаю в Японії', 'SUBMITTED', 1);
+
+INSERT INTO team_users (team_id, user_id) VALUES
+(1, 4), (1, 6), (1, 8),
+(2, 5), (2, 9),
+(3, 7), (3, 10);
+
+INSERT INTO submissions (submission_id, file_link, file_key, created_at, team_id) VALUES
+(1, 'https://drive.google.com/kyiv-presentation', null, '2026-05-15 10:00:00.000000', 1),
+(2, 'https://drive.google.com/lviv-methods-pdf',   null, '2026-05-15 11:30:00.000000', 2),
+(3, 'https://drive.google.com/dnipro-history-doc', null, '2026-05-15 14:15:00.000000', 3);
+
+INSERT INTO tags (name) VALUES
+('Японія'), ('Китай'), ('Тайвань'), ('Індія'),
+('Матча'), ('Пуер'), ('Улуни'), ('Зелений чай'), ('Чорний чай'),
+('Методи заварювання'), ('Сервіс'), ('Каса'), ('Вода');

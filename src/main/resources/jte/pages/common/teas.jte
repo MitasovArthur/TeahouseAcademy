@@ -1,7 +1,7 @@
-@import java.util.List
-@import java.util.Map
 @import com.teahouse.teahouse_academy.model.dto.tea.TeaDto
 @import com.teahouse.teahouse_academy.model.enumProject.TypeTea
+@import java.util.List
+@import java.util.Map
 
 @param List<TypeTea> teaTypes
 @param List<TeaDto> teas
@@ -31,13 +31,13 @@
                                class="form-control border-success"
                                placeholder="Введіть інгредієнт, регіон..."
                                value="${searchQuery}" autocomplete="off">
-                        <button class="btn btn-outline-success" type="button"
+                        <button class="btn btn-outline-success d-inline-flex align-items-center gap-2" type="button"
                                 data-bs-toggle="modal" data-bs-target="#ingredientsModal">
-                            🌿 Склад
+                            <span class="d-flex">@template.layout.icon(name = "leaf", size = "18")</span> Склад
                         </button>
-                        <button class="btn btn-outline-success" type="button"
+                        <button class="btn btn-outline-success d-inline-flex align-items-center gap-2" type="button"
                                 data-bs-toggle="modal" data-bs-target="#countriesModal">
-                            🗺️ Регіони
+                            <span class="d-flex">@template.layout.icon(name = "mapPin", size = "18")</span> Регіони
                         </button>
                     </div>
                 </div>
@@ -50,12 +50,15 @@
                         <span id="typeBtnLabel">
                             ${selectedType.isEmpty() ? "Всі види чаю" : selectedType}
                         </span>
-                        <span>▼</span>
+                        <span class="d-flex">@template.layout.icon(name = "arrowDown", size = "18")</span>
                     </button>
                 </div>
 
                 <div class="col-md-2">
-                    <button class="btn btn-success btn-lg w-100" type="submit">Знайти</button>
+                    <button class="btn btn-success btn-lg w-100 fw-bold d-inline-flex align-items-center justify-content-center gap-2"
+                            type="submit">
+                        <span class="d-flex">@template.layout.icon(name = "search", size = "18")</span> Знайти
+                    </button>
                 </div>
             </div>
         </form>
@@ -63,7 +66,7 @@
         <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
             @if(teas.isEmpty())
                 <div class="col-12 text-center text-muted mt-5">
-                    <h4 class="fw-bold">За вашим запитом нічого не знайдено 😔</h4>
+                    <h4 class="fw-bold">За вашим запитом нічого не знайдено</h4>
                     <p>Спробуйте змінити критерії пошуку.</p>
                 </div>
             @else
@@ -85,18 +88,18 @@
                                 </button>
 
                                 @if(isAdmin)
-                                    <div class="d-flex gap-1 ms-auto">
+                                    <div class="d-flex gap-2 ms-auto">
                                         <a href="/teas/${tea.getId()}/edit"
-                                           class="btn btn-sm btn-outline-secondary"
-                                           title="Редагувати">
-                                            ✏️
+                                           class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center"
+                                           title="Редагувати" style="width: 32px; height: 32px; padding: 0;">
+                                            <span class="d-flex">@template.layout.icon(name = "pencil", size = "16")</span>
                                         </a>
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-danger delete-btn"
+                                                class="btn btn-sm btn-outline-danger delete-btn d-inline-flex align-items-center justify-content-center"
                                                 data-tea-id="${tea.getId()}"
                                                 data-tea-name="${tea.getName()}"
-                                                title="Видалити">
-                                            🗑️
+                                                title="Видалити" style="width: 32px; height: 32px; padding: 0;">
+                                            <span class="d-flex">@template.layout.icon(name = "trash", size = "16")</span>
                                         </button>
                                     </div>
                                 @endif
@@ -244,15 +247,20 @@
     </div>
 
     <style>
-        .tea-green { color: rgb(14, 87, 39); }
-        .tea-bg    { background-color: rgb(14, 87, 39); }
+        .tea-green {
+            color: rgb(14, 87, 39);
+        }
+
+        .tea-bg {
+            background-color: rgb(14, 87, 39);
+        }
     </style>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const searchInput     = document.getElementById("searchInput");
+            const searchInput = document.getElementById("searchInput");
             const hiddenTypeInput = document.getElementById("hiddenTypeInput");
-            const typeBtnLabel    = document.getElementById("typeBtnLabel");
+            const typeBtnLabel = document.getElementById("typeBtnLabel");
 
             document.querySelectorAll(".picker-btn").forEach(btn => {
                 btn.addEventListener("click", function () {
@@ -272,7 +280,7 @@
 
             document.querySelectorAll(".type-btn").forEach(btn => {
                 btn.addEventListener("click", function () {
-                    hiddenTypeInput.value    = this.dataset.value;
+                    hiddenTypeInput.value = this.dataset.value;
                     typeBtnLabel.textContent = this.dataset.label;
                     document.querySelectorAll(".type-btn").forEach(b => b.classList.replace("btn-success", "btn-outline-success"));
                     this.classList.replace("btn-outline-success", "btn-success");
@@ -281,7 +289,7 @@
             });
 
             document.getElementById("clearTypeBtn").addEventListener("click", function () {
-                hiddenTypeInput.value    = "";
+                hiddenTypeInput.value = "";
                 typeBtnLabel.textContent = "Всі види чаю";
                 document.querySelectorAll(".type-btn").forEach(b => b.classList.replace("btn-success", "btn-outline-success"));
                 typeModal.hide();
@@ -289,7 +297,7 @@
 
             const detailsModal = bootstrap.Modal.getOrCreateInstance(document.getElementById("teaDetailsModal"));
             const detailsTitle = document.getElementById("teaDetailsTitle");
-            const detailsList  = document.getElementById("teaComponentsList");
+            const detailsList = document.getElementById("teaComponentsList");
 
             document.querySelectorAll(".details-btn").forEach(btn => {
                 btn.addEventListener("click", function () {
@@ -302,7 +310,7 @@
                     if (raw.length === 0 || (raw.length === 1 && raw[0] === "")) {
                         detailsList.innerHTML = "<li class=\"list-group-item text-muted fst-italic\">Склад не вказано</li>";
                     } else {
-                        raw.forEach(function(comp) {
+                        raw.forEach(function (comp) {
                             detailsList.innerHTML +=
                                 "<li class=\"list-group-item\"><span class=\"me-2 text-success\">\u2705</span>" + comp + "</li>";
                         });

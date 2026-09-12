@@ -23,9 +23,13 @@ public class ShopEntity {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
+    @Column(name = "address", nullable = false, length = 200)
+    private String address;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private CityEntity city;
+
 
     @OneToMany(mappedBy = "shop")
     @ToString.Exclude
