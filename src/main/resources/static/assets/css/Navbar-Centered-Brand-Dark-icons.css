@@ -72,11 +72,10 @@
   height: 2px;
   bottom: 0;
   left: 0;
-  background-color: #cfd30a;
+  background-color: var(--gold);
   transition: width 0.3s ease;
 }
 
 .navbar-nav .nav-link:hover::after {
   width: 100%;
 }
-

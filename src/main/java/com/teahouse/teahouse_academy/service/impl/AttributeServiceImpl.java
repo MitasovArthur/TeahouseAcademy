@@ -1,75 +1,89 @@
 package com.teahouse.teahouse_academy.service.impl;
 
-import com.teahouse.teahouse_academy.model.dto.attribute.AttributeShortDto;
+import com.teahouse.teahouse_academy.model.dto.attribute.AttributeRequestDto;
 import com.teahouse.teahouse_academy.model.entity.AttributeEntity;
 import com.teahouse.teahouse_academy.model.enumProject.CategoryAttribute;
 import com.teahouse.teahouse_academy.repository.AttributeRepository;
 import com.teahouse.teahouse_academy.service.AttributeService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AttributeServiceImpl implements AttributeService {
 
     private final AttributeRepository attributeRepository;
 
     @Override
-    @Cacheable("components")
-    public Map<String, List<String>> getComponentsGroupedByLetter() {
-        List<String> names = attributeRepository
-                .findByCategoryInOrderByNameAsc(
-                        List.of(CategoryAttribute.COMPONENT)
-                )
-                .stream()
-                .map(AttributeEntity::getName)
-                .toList();
-
-        return groupByFirstLetter(names);
+    public AttributeEntity getById(Long id) {
+        return attributeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Attribute not found with id: " + id));
     }
 
     @Override
-    @Cacheable("regions")
-    public Map<String, List<String>> getRegionsGroupedByCountry() {
-        return attributeRepository
-                .findCountriesWithRegions(CategoryAttribute.COUNTRY)
-                .stream()
-                .collect(Collectors.toMap(
-                        AttributeEntity::getName,
-                        country -> country.getChildren().stream()
-                                .map(AttributeEntity::getName)
-                                .sorted()
-                                .toList(),
-                        (a, b) -> a,
-                        LinkedHashMap::new
-                ));
+    public List<AttributeEntity> getAllAttributesById(List<Long> ids) {
+        return attributeRepository.findAllById(ids);
     }
 
-    private Map<String, List<String>> groupByFirstLetter(List<String> names) {
-        Map<String, List<String>> grouped = new TreeMap<>();
-        for (String name : names) {
-            if (name == null || name.isBlank()) continue;
-            String letter = name.substring(0, 1).toUpperCase();
-            grouped.computeIfAbsent(letter, k -> new ArrayList<>()).add(name);
+    @Override
+    public List<AttributeEntity> getByCategory(CategoryAttribute category) {
+        return attributeRepository.findByCategoryOrderByNameAsc(category);
+    }
+
+    @Override
+    public List<AttributeEntity> getCountriesWithRegions() {
+        return attributeRepository.findCountriesWithRegions(CategoryAttribute.COUNTRY);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = {"components", "regions"}, allEntries = true)
+    public AttributeEntity create(AttributeRequestDto requestDto) {
+        AttributeEntity attribute = new AttributeEntity();
+        attribute.setName(requestDto.getName());
+        attribute.setCategory(requestDto.getCategory());
+
+        if (requestDto.getParentId() != null) {
+            AttributeEntity parent = getById(requestDto.getParentId());
+            attribute.setParent(parent);
         }
-        return grouped;
+
+        return attributeRepository.save(attribute);
     }
 
     @Override
-    public List<AttributeShortDto> getAllAttributes() {
-        return attributeRepository.findAll().stream()
-                .map(a -> new AttributeShortDto(a.getId(), a.getName()))
-                .toList();
+    @Transactional
+    @CacheEvict(value = {"components", "regions"}, allEntries = true)
+    public AttributeEntity update(Long id, AttributeRequestDto requestDto) {
+        AttributeEntity existing = getById(id);
+        existing.setName(requestDto.getName());
+        existing.setCategory(requestDto.getCategory());
+        assignParent(existing, requestDto.getParentId());
+
+        return attributeRepository.save(existing);
     }
 
     @Override
-    public List<AttributeShortDto> getByCategory(CategoryAttribute category) {
-        return attributeRepository.findByCategoryOrderByNameAsc(category).stream()
-                .map(a -> new AttributeShortDto(a.getId(), a.getName()))
-                .toList();
+    @Transactional
+    @CacheEvict(value = {"components", "regions"}, allEntries = true)
+    public void delete(Long id) {
+        if (!attributeRepository.existsById(id)) {
+            throw new EntityNotFoundException("Cannot delete. Attribute not found with id: " + id);
+        }
+        attributeRepository.deleteById(id);
+    }
+
+    private void assignParent(AttributeEntity attribute, Long parentId) {
+        if (parentId != null) {
+            attribute.setParent(getById(parentId));
+        } else {
+            attribute.setParent(null);
+        }
     }
 }

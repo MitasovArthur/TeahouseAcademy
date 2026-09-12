@@ -4,12 +4,14 @@ import com.teahouse.teahouse_academy.model.dto.attribute.AttributeShortDto;
 import com.teahouse.teahouse_academy.model.dto.review.ReviewShortDto;
 import com.teahouse.teahouse_academy.model.enumProject.TypeTea;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TeaDto {

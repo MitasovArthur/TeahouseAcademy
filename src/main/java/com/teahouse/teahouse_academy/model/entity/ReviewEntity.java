@@ -6,10 +6,11 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "review")
+@Table(name = "reviews")
 public class ReviewEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +31,14 @@ public class ReviewEntity {
     private String comment;
 
     @Column(name = "taste", nullable = false)
-    private Long taste;
+    private Integer taste;
 
     @Column(name = "aroma", nullable = false)
-    private Long aroma;
+    private Integer aroma;
 
     @Column(name = "strength", nullable = false)
-    private Long strength;
+    private Integer strength;
 
     @Column(name = "astringency", nullable = false)
-    private Long astringency;
+    private Integer astringency;
 }

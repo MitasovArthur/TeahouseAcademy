@@ -1,5 +1,8 @@
 package com.teahouse.teahouse_academy.model.enumProject;
 
+import lombok.Getter;
+
+@Getter
 public enum TypeTea {
     WHITE("Білий"),
     YELLOW("Жовтий"),
@@ -15,9 +18,5 @@ public enum TypeTea {
 
     TypeTea(String displayName) {
         this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
     }
 }
